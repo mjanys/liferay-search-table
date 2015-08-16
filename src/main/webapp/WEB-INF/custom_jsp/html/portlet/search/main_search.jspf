@@ -62,13 +62,15 @@
 	Indexer indexer = FacetedSearcher.getInstance();
 
 	// HOOK
-	mainSearchSearchContainer.setOrderByCol(request.getParameter("orderByCol"));
-	mainSearchSearchContainer.setOrderByType(request.getParameter("orderByType") != null ? request.getParameter("orderByType") : "asc");
-	if (mainSearchSearchContainer.getOrderByCol() != null) {
-		searchContext.setSorts(new Sort[]{
-				new Sort(mainSearchSearchContainer.getOrderByCol(), "asc".equals(mainSearchSearchContainer.getOrderByType()))
-		});
-	}
+    if (Boolean.TRUE.toString().equalsIgnoreCase((String)request.getAttribute("seachTable"))) {
+        mainSearchSearchContainer.setOrderByCol(request.getParameter("orderByType") != null ? request.getParameter("orderByCol") : "createDate");
+        mainSearchSearchContainer.setOrderByType(request.getParameter("orderByType") != null ? request.getParameter("orderByType") : "asc");
+        if (mainSearchSearchContainer.getOrderByCol() != null) {
+            searchContext.setSorts(new Sort[]{
+                    new Sort(mainSearchSearchContainer.getOrderByCol(), "asc".equals(mainSearchSearchContainer.getOrderByType()))
+            });
+        }
+    }
 	// HOOK END
 
 	Hits hits = indexer.search(searchContext);

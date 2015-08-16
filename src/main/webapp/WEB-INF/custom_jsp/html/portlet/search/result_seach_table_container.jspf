@@ -17,6 +17,13 @@
 			stringKey="<%= true %>"
 			>
 
+		<%@include file="view_url.jspf"%>
+		<liferay-ui:search-container-column-text>
+			<a href="<%=viewURL%>">
+				<liferay-ui:icon image="view"/>
+			</a>
+		</liferay-ui:search-container-column-text>
+
 		<%--@elvariable id="document" type="com.liferay.portal.kernel.search.Document"--%>
 		<c:if test="${empty columns}">
 			<c:set var="columns" value="${document.fields.keySet()}"/>
@@ -44,13 +51,6 @@
 			</c:choose>
 
 		</c:forEach>
-
-		<%@include file="view_url.jspf"%>
-		<liferay-ui:search-container-column-text>
-			<a href="<%=viewURL%>">
-				<liferay-ui:icon image="view"/>
-			</a>
-		</liferay-ui:search-container-column-text>
 
 		<%--<liferay-ui:search-container-column-jsp path='<%= displayResultsInDocumentForm ? "/html/portlet/search/main_search_document_form.jsp" : "/html/portlet/search/main_search_result_form.jsp" %>' />--%>
 	</liferay-ui:search-container-row>
