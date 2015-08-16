@@ -1,0 +1,73 @@
+<%@ page import="java.util.Date" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="liferay-ui" uri="http://liferay.com/tld/ui" %>
+<liferay-ui:search-container
+		searchContainer="<%= mainSearchSearchContainer %>"
+		total="<%= hits.getLength() %>"
+		>
+	<liferay-ui:search-container-results
+			results="<%= hits.toList() %>"
+			/>
+
+	<liferay-ui:search-container-row
+			className="com.liferay.portal.kernel.search.Document"
+			escapedModel="<%= false %>"
+			keyProperty="UID"
+			modelVar="document"
+			stringKey="<%= true %>"
+			>
+
+		<%--@elvariable id="document" type="com.liferay.portal.kernel.search.Document"--%>
+		<c:if test="${empty columns}">
+			<c:set var="columns" value="${document.fields.keySet()}"/>
+		</c:if>
+		<c:forEach var="column" items="${columns}">
+			<c:set var="name" value="${column}" scope="request"/>
+			<c:set var="value" value="${document.get(name)}" scope="request"/>
+			<c:choose>
+				<c:when test="${not empty dateColumns and dateColumns.contains(name) and not empty value}">
+					<liferay-ui:search-container-column-date
+							name="st-${name}"
+							value="${document.getDate(name)}"
+							orderable="<%=true%>"
+							orderableProperty="${name}"/>
+				</c:when>
+				<c:otherwise>
+					<c:set var="value" value="${document.get(pageContext.response.locale, name)}" scope="request"/>
+					<liferay-ui:search-container-column-text
+							name="st-${name}"
+							orderable="<%=true%>"
+							orderableProperty="${name}">
+						<%= StringUtil.highlight(HtmlUtil.escape((String)request.getAttribute("value")), queryTerms) %>
+					</liferay-ui:search-container-column-text>
+				</c:otherwise>
+			</c:choose>
+
+		</c:forEach>
+
+		<%@include file="view_url.jspf"%>
+		<liferay-ui:search-container-column-text>
+			<a href="<%=viewURL%>">
+				<liferay-ui:icon image="view"/>
+			</a>
+		</liferay-ui:search-container-column-text>
+
+		<%--<liferay-ui:search-container-column-jsp path='<%= displayResultsInDocumentForm ? "/html/portlet/search/main_search_document_form.jsp" : "/html/portlet/search/main_search_result_form.jsp" %>' />--%>
+	</liferay-ui:search-container-row>
+
+	<liferay-ui:search-iterator type="more" paginate="<%=true%>" searchContainer="<%=mainSearchSearchContainer%>"/>
+
+	<c:if test="<%= displayMainQuery && (hits.getQuery() != null) %>">
+		<table class="full-query">
+			<tr>
+				<td valign="top">
+					<div class="container">
+						<code>
+							<%= HtmlUtil.escape(hits.getQuery().toString()) %>
+						</code>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</c:if>
+</liferay-ui:search-container>

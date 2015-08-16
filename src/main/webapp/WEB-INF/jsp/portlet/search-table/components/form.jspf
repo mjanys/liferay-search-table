@@ -1,0 +1,18 @@
+<portlet:renderURL var="currentUrl"/>
+
+<%--<liferay-ui:search/>--%>
+<form action="${currentUrl}" method="get" id="${ns}queryForm">
+  <input name="p_p_id" type="hidden" value="<%=themeDisplay.getPortletDisplay().getId()%>">
+  <input name="p_p_lifecycle" type="hidden" value="0">
+  <input name="p_p_state" type="hidden" value="maximized">
+  <input name="p_p_mode" type="hidden" value="view">
+  <input name="p_p_col_id" type="hidden" value="column-1">
+  <input name="p_p_col_count" type="hidden" value="1">
+  <%--<input name="_3_struts_action" type="hidden" value="/search/search">--%>
+  <input name="${ns}redirect" type="hidden" value="${currentUrl}">
+  <input name="${ns}groupId" type="hidden" value="<%=themeDisplay.getSiteGroupId()%>">
+  <input name="${ns}keywords" size="30" title="<liferay-ui:message key="search" />" type="text" id="${ns}searchInput">
+  <input align="absmiddle" border="0" src="<%=themeDisplay.getPathThemeImages() + "/common/search.png"%>" title="<liferay-ui:message key="search" />" type="image"/>
+</form>
+
+<div id="${ns}whisperResults"></div>
