@@ -20,6 +20,7 @@ import javax.portlet.RenderResponse;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 
 import static cz.janys.portlet.searchportlet.SearchTableConstants.*;
@@ -73,9 +74,21 @@ public class SearchTableViewController {
 
     private String searchResult(PortletPreferences portletPreferences, RenderRequest request, String keyword) throws SystemException, PortalException {
         addSearchTableAttributes(request, portletPreferences);
-        request.setAttribute(ATTR_KEYWORDS, keyword);
+        request.setAttribute(ATTR_KEYWORDS, resolveKeyword(request, keyword));
 
         return VIEW_SEARCH_RESULT;
+    }
+
+    private String resolveKeyword(RenderRequest request, String keyword) {
+        Enumeration<String> parameterNames = request.getParameterNames();
+        while (parameterNames.hasMoreElements()) {
+            String parameterName = parameterNames.nextElement();
+            if (parameterName.startsWith("st-")) {
+                String rawParameterName = parameterName.substring("st-".length());
+                return  rawParameterName + ":" + request.getParameter(parameterName);
+            }
+        }
+        return keyword;
     }
 
     private void addSearchTableAttributes(RenderRequest request, PortletPreferences portletPreferences) {
